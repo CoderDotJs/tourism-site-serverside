@@ -33,7 +33,7 @@ async function run() {
     const carsCollection = carsDatabase.collection('car')
     //db and collection for placeorder 
     const placeOrderDatabase = client.db('placeOrder');
-    const ordersCollection = carsDatabase.collection('orders')
+    const ordersCollection = placeOrderDatabase.collection('orders')
 
     //get api
     app.get('/services', async (req, res)=>{
@@ -58,12 +58,17 @@ async function run() {
       const query = { _id: ObjectId(id) };
       const service = await serviceCollection.findOne(query);
       // console.log('load user with id: ', id);
-      console.log(service)
+      // console.log(service)
       res.send(service);
   })
 
-    app.put('/services/place-order/:services_id', async (req, res)=>{
-      const id = req.body
+    app.put('/place-order', async (req, res)=>{
+      const newOrder = req.body;
+      const result = await ordersCollection.insertOne(newOrder);
+      // console.log('got new user', req.body);
+      // console.log('added user', result);
+      console.log(newOrder)
+      res.json(result);
     })
 
   } finally {
