@@ -5,6 +5,8 @@ const ObjectId = require('mongodb').ObjectId;
 const { MongoClient } = require("mongodb");
 require('dotenv').config()
 const port = process.env.PORT || 5000
+
+
 app.use(express.json())
 app.use(cors())
 
@@ -65,8 +67,6 @@ async function run() {
     app.post('/place-order', async (req, res)=>{
       const newOrder = req.body;
       const result = await ordersCollection.insertOne(newOrder);
-      // console.log('got new user', req.body);
-      // console.log('added user', result);
       console.log(newOrder)
       res.json(result);
     })
