@@ -9,7 +9,7 @@ app.use(cors())
 
 
 app.get('/', (req, res) =>{
-  res.send('services server running')
+  res.send('TravelGo server running')
 })
 
 
@@ -53,7 +53,7 @@ async function run() {
     })
 
     app.put('/services/place-order/:services_name', async (req, res)=>{
-      
+
     })
 
   } finally {
