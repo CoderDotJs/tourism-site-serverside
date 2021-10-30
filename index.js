@@ -50,26 +50,79 @@ async function run() {
       res.send(car)
     })
 
-    // app.get('/services/:service_name', async (req, res) =>{
-    //   const id = req.body
-    //   console.log(id)
-    // })
+    //get method for getting the services
 
     app.get('/services/place-order/:id', async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const service = await serviceCollection.findOne(query);
-      // console.log('load user with id: ', id);
-      // console.log(service)
       res.send(service);
-  })
+    })
+
+    //place order post method
 
     app.post('/place-order', async (req, res)=>{
       const newOrder = req.body;
       const result = await ordersCollection.insertOne(newOrder);
       console.log(newOrder)
       res.json(result);
+      res.send(res.json(result))
     })
+
+    //get method to show the ordered thinks
+
+    app.get('/my-orders', async (req, res)=>{
+      const collection = ordersCollection.find({})
+      const orders = await collection.toArray()
+      res.send(orders)
+    })
+
+    //delete mathod for manage my orders
+
+    app.delete('/cancel-order/:id', async (req, res)=>{
+        const id = req.params.id.trim();
+        const query = { _id: ObjectId(id)}
+        const del = await ordersCollection.deleteOne(query);
+        console.log('deleting the user', query)
+        res.json(del)
+    })
+
+    //put method to update staus on manage orders
+
+    app.put('/update-status/:id', async (req, res)=>{
+      const id = req.params.id;
+        const updatedOrder = req.body;
+        const filter = { _id: ObjectId(id)}
+        const updateDoc = {
+          $set: {
+            status: updatedOrder.status
+          }
+        }
+        const options = { upsert: true }
+      const result = await ordersCollection.updateOne(filter, updateDoc, options)
+      console.log('updating user: ', updatedOrder);
+      res.json(result)
+    })
+
+    //get method for get data form orders 
+
+    app.get('/orders/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const service = await ordersCollection.findOne(query);
+      res.send(service);
+    })
+
+    //post method to add new service
+
+    app.post('/add-new-services', async (req, res)=>{
+      const newService = req.body;
+      const result = await serviceCollection.insertOne(newService);
+      console.log(newService)
+      res.json(result);
+      // res.send(res.json(result))
+    })
+
 
   } finally {
     // Ensures that the client will close when you finish/error
