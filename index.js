@@ -62,7 +62,7 @@ async function run() {
       res.send(service);
   })
 
-    app.put('/place-order', async (req, res)=>{
+    app.post('/place-order', async (req, res)=>{
       const newOrder = req.body;
       const result = await ordersCollection.insertOne(newOrder);
       // console.log('got new user', req.body);
